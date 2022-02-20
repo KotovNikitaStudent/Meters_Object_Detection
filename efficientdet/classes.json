@@ -1,0 +1,34 @@
+{
+  "1": {
+    "id": 0,
+    "name": "meter"
+  },
+  "2": {
+    "id": 1,
+    "name": "value"
+  },
+  "3": {
+    "id": 2,
+    "name": "seal"
+  },
+  "4": {
+    "id": 3,
+    "name": "mag"
+  },
+  "5": {
+    "id": 4,
+    "name": "seal2"
+  },
+  "6": {
+    "id": 5,
+    "name": "model"
+  },
+  "7": {
+    "id": 6,
+    "name": "serial"
+  },
+  "8": {
+    "id": 7,
+    "name": "breaker"
+  }
+}
