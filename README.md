@@ -6,9 +6,13 @@
 # Requirements and environment
 
 ### Linux/MacOS
-Создайте виртуальное окружение python:
+Создайте директорию для проект. Перейдите в директорию проекта и создайте в ней виртуальное окружение для python (где `name_of_venv` - название вашего виртуального окружения):
 ```console
 virtualenv name_of_venv
+```
+Запуск виртуального окружения:
+```console
+source name_of_venv/bin/activate
 ```
 Установите требуемые пакеты:
 ```console
