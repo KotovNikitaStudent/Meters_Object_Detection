@@ -3,6 +3,24 @@ from Extract_Detection import *
 from PreprocessData import EfficientDetPreprocessor, YOLOPreprocessor
 from calculate_metrics import calculate_metrics
 from figure import figure
+from Writer import Writer
+
+
+def extract_class_names_from_file(path_to_file: str) -> list:
+    """Extract names of classes from file"""
+    import json
+
+    classes = None
+    if path_to_file.endswith(".json"):
+        classes = sorted(
+            [class_["name"] for class_ in json.load(open(path_to_file, "r")).values()]
+        )
+    if path_to_file.endswith(".names"):
+        with open(path_to_file, "r") as f:
+            classes = sorted(f.read().split("\n"))
+        f.close()
+
+    return classes
 
 
 def main():
@@ -47,18 +65,7 @@ def main():
     ex_xml = ExtractorXML()
     ex_yolo = ExtractorYOLO()
 
-    class_names = sorted(
-        [
-            "breaker",
-            "mag",
-            "meter",
-            "model",
-            "seal",
-            "seal2",
-            "serial",
-            "value",
-        ]
-    )
+    class_names = extract_class_names_from_file("classes.json")
 
     ANN_XML = (
         "/Users/nikita/Desktop/zip_meters/crop_dataset/00_dataset/meters01/Annotations/"
@@ -80,7 +87,9 @@ def main():
 
     x = YOLOPreprocessor(preprocess_dict).preprocess()
     y = calculate_metrics(x)
-    figure(y)
+
+    data_for_figure = {"data": y, "classes": class_names, "save": False, "show": False}
+    figure(data_for_figure)
 
 
 if __name__ == "__main__":

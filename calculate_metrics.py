@@ -7,24 +7,12 @@ def calculate_metrics(data):
     det = data["detections"]
     ann = data["annotations"]
 
-    pr, rc, f1_m, sc, ap = [], [], [], [], []
+    pr, rc, f1_m, sc, ap, tp_roc, fp_roc = [], [], [], [], [], [], []
     average_precisions = 0
     iou_threshold = 0.5
 
     all_detections = [list(i.values()) for i in det]
     all_annotations = [list(i.values()) for i in ann]
-
-    # print('\nannotation\n')
-    #
-    # for i in all_annotations:
-    #     print(i)
-    #
-    # print('=' * 100)
-    #
-    # print('\ndetection\n')
-    #
-    # for i in all_detections:
-    #     print(i)
 
     for label in range(len(all_detections[0])):
         false_positives = np.zeros((0,))
@@ -78,10 +66,12 @@ def calculate_metrics(data):
             average_precisions = 0
             continue
 
+        true_positive_roc = true_positives
+        false_positives_roc = false_positives
+
         indices = np.argsort(-scores)
         false_positives = false_positives[indices]
         true_positives = true_positives[indices]
-
         false_positives = np.cumsum(false_positives)
         true_positives = np.cumsum(true_positives)
 
@@ -99,8 +89,21 @@ def calculate_metrics(data):
         average_precisions = compute_ap(recall, precision)
         ap.append(average_precisions)
 
+        tp_roc.append(true_positive_roc.tolist())
+        fp_roc.append(false_positives_roc.tolist())
+
     result = {}
-    result.update({"pr": pr, "rc": rc, "sc": sc, "f1_m": f1_m, "ap": ap})
+    result.update(
+        {
+            "pr": pr,
+            "rc": rc,
+            "sc": sc,
+            "f1_m": f1_m,
+            "ap": ap,
+            "tp_roc": tp_roc,
+            "fp_roc": fp_roc,
+        }
+    )
     return result
 
 
