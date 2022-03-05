@@ -1,3 +1,4 @@
+import datetime
 import math
 import numpy as np
 import warnings
@@ -63,7 +64,7 @@ class Writer:
             }
         )
 
-        frame.to_csv(f"meters_csv.csv", sep=";", index=False, index_label=True)
+        frame.to_csv(f"meters_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.csv", sep=";", index=False, index_label=True)
 
     def __truncate(self, number, digits=4):
         stepper = 10.0**digits

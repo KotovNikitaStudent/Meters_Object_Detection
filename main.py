@@ -90,6 +90,8 @@ def main():
 
     data_for_figure = {"data": y, "classes": class_names, "save": False, "show": False}
     figure(data_for_figure)
+    # Writer(data_for_figure).write_to_csv()
+    Writer(data_for_figure).write_to_terminal()
 
 
 if __name__ == "__main__":
