@@ -3,9 +3,9 @@ from compute_overlap import compute_overlap
 
 
 def calculate_metrics(data):
-    """Calculation of F1, R, P, score metrics"""
-    det = data['detections']
-    ann = data['annotations']
+    """Calculation of F1, R, P, score metrics, recording data about them in the .json file"""
+    det = data["detections"]
+    ann = data["annotations"]
 
     pr, rc, f1_m, sc, ap = [], [], [], [], []
     average_precisions = 0
@@ -13,6 +13,18 @@ def calculate_metrics(data):
 
     all_detections = [list(i.values()) for i in det]
     all_annotations = [list(i.values()) for i in ann]
+
+    # print('\nannotation\n')
+    #
+    # for i in all_annotations:
+    #     print(i)
+    #
+    # print('=' * 100)
+    #
+    # print('\ndetection\n')
+    #
+    # for i in all_detections:
+    #     print(i)
 
     for label in range(len(all_detections[0])):
         false_positives = np.zeros((0,))
@@ -38,7 +50,9 @@ def calculate_metrics(data):
             for d in detections:
                 scores = np.append(scores, d[4])
                 d = np.asarray([d])
-                annotations = np.array([np.array(xi) for xi in annotations], dtype=np.float64)
+                annotations = np.array(
+                    [np.array(xi) for xi in annotations], dtype=np.float64
+                )
 
                 if annotations.shape[0] == 0:
                     false_positives = np.append(false_positives, 1)
@@ -49,7 +63,10 @@ def calculate_metrics(data):
                 assigned_annotation = np.argmax(overlaps, axis=1)
                 max_overlap = overlaps[0, assigned_annotation]
 
-                if max_overlap >= iou_threshold and assigned_annotation not in detected_annotations:
+                if (
+                    max_overlap >= iou_threshold
+                    and assigned_annotation not in detected_annotations
+                ):
                     false_positives = np.append(false_positives, 0)
                     true_positives = np.append(true_positives, 1)
                     detected_annotations.append(assigned_annotation)
@@ -69,7 +86,9 @@ def calculate_metrics(data):
         true_positives = np.cumsum(true_positives)
 
         recall = true_positives / num_annotations
-        precision = true_positives / np.maximum(true_positives + false_positives, np.finfo(np.float64).eps)
+        precision = true_positives / np.maximum(
+            true_positives + false_positives, np.finfo(np.float64).eps
+        )
 
         pr.append(precision.tolist())
         rc.append(recall.tolist())
@@ -87,13 +106,13 @@ def calculate_metrics(data):
 
 def compute_ap(recall: list, precision: list):
     """Compute the average precision, given the recall and precision curves"""
-    mrec = np.concatenate(([0.], recall, [1.]))
-    mpre = np.concatenate(([0.], precision, [0.]))
+    mrec = np.concatenate(([0.0], recall, [1.0]))
+    mpre = np.concatenate(([0.0], precision, [0.0]))
 
     for i in range(mpre.size - 1, 0, -1):
-        mpre[i-1] = np.maximum(mpre[i-1], mpre[i])
+        mpre[i - 1] = np.maximum(mpre[i - 1], mpre[i])
 
     i = np.where(mrec[1:] != mrec[:-1])[0]
-    ap = np.sum((mrec[i+1] - mrec[i]) * mpre[i+1])
+    ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
 
     return ap.tolist()

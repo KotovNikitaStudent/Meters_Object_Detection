@@ -4,12 +4,12 @@ from collections import defaultdict
 
 class Preprocessor:
     def __init__(self, data):
-        self.classes = data['classes']
-        self.ann_extractor = data['ann_extractor']
-        self.det_extractor = data['det_extractor']
-        self.ann_path = data['ann_path']
-        self.det_path = data['det_path']
-        self.names_test_samples = data['names_test_samples']
+        self.classes = data["classes"]
+        self.ann_extractor = data["ann_extractor"]
+        self.det_extractor = data["det_extractor"]
+        self.ann_path = data["ann_path"]
+        self.det_path = data["det_path"]
+        self.names_test_samples = data["names_test_samples"]
 
     def preprocess(self):
         pass
@@ -46,8 +46,7 @@ class EfficientDetPreprocessor(Preprocessor):
 
             all_det.append(temp_dict_det)
 
-        return {'annotations': all_ann,
-                'detections': all_det}
+        return {"annotations": all_ann, "detections": all_det}
 
 
 class YOLOPreprocessor(Preprocessor):
@@ -80,6 +79,7 @@ class YOLOPreprocessor(Preprocessor):
         for dtf in sorted(os.listdir(self.det_path)):
             loc_path_to_det = os.path.join(self.det_path, dtf)
             det_extract = self.det_extractor.extract(loc_path_to_det)
+
             det_extract.sort(key=lambda x: x[0])
 
             for j in det_extract:
@@ -100,16 +100,15 @@ class YOLOPreprocessor(Preprocessor):
 
             all_det.append(temp_dict_det)
 
-        return {'annotations': all_ann,
-                'detections': all_det}
+        return {"annotations": all_ann, "detections": all_det}
 
 
 def get_list_of_images(path_to_file: str) -> list:
-    if not path_to_file.split('/')[-1].endswith('.txt'):
+    if not path_to_file.split("/")[-1].endswith(".txt"):
         raise Exception("Wrong file extension")
     else:
         list_of_files = []
-        with open(path_to_file, 'r') as file:
+        with open(path_to_file, "r") as file:
             for line in file:
                 list_of_files.append(line.strip())
         file.close()
@@ -121,7 +120,7 @@ def test_files(curr_files, test_list):
     list_files = []
 
     for cf in curr_files:
-        if cf.split('.')[0] in test_list:
+        if cf.split(".")[0] in test_list:
             list_files.append(cf)
 
     return list_files
