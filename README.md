@@ -26,7 +26,7 @@ python3 main.py
 ```
 # Result
 Есть возможность отобразить рисунки на экране или сохранить их. Расчем метрик выводится в терминал или сохраняется в файл
-<table width="1000">
+<table width="1000" margin=auto>
   <td><img src="figures/F1_2022-03-05_22:43:16.jpg" width="213" height="160"></td>
   <td><img src="figures/terminal_output.jpg" width="213" height="160"></td>
   <td><img src="figures/RP_2022-03-05_22:43:16.jpg" width="213" height="160"></td>
