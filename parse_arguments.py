@@ -66,15 +66,5 @@ def parse_arguments():
         action='store_true',
         help="save the results of calculating F1, Recall, Precision, AUC, AP, mAP metrics to a file in the format .csv",
     )
-    parser.add_argument(
-        "--yolo",
-        action='store_true',
-        help="configuration of parsers for detector YOLO",
-    )
-    parser.add_argument(
-        "--efficient_det",
-        action='store_true',
-        help="configuration of parsers for detector EfficientDet",
-    )
 
     return parser.parse_args()

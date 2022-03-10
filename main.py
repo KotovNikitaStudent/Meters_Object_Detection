@@ -25,82 +25,67 @@ def extract_class_names_from_file(path_to_file: str) -> list:
 
 
 def main():
-    class_names = None
-    detection_extractor = None
-    annotation_extractor = None
-    path_to_ann = None
-    path_to_det = None
-    names_test_samples = None
+    preprocess_dict = {
+        "classes": None,
+        "ann_extractor": None,
+        "det_extractor": None,
+        "ann_path": None,
+        "det_path": None,
+        "names_test_samples": None,
+    }
+    preprocess = None
 
     args = parse_arguments()
 
     if args.test_files is not None:
-        names_test_samples = args.test_files
+        preprocess_dict["names_test_samples"] = args.test_files
     else:
-        raise Exception('You did not specify the absolute path to the file with all test instances')
+        raise Exception(
+            "You did not specify the absolute path to the file with all test instances"
+        )
 
     if args.cls_names is not None:
-        class_names = args.cls_names
+        preprocess_dict["classes"] = extract_class_names_from_file(args.cls_names)
     else:
-        raise Exception('You did not specify an absolute path to the file with class names')
-
-    if args.xml_ann is not None:
-        path_to_ann = args.xml_ann
-        annotation_extractor = ExtractorXML()
-    else:
-        raise Exception('Annotation file path does not exist')
-
-    if args.json_ann is not None:
-        path_to_ann = args.json_ann
-        annotation_extractor = ExtractorJSON()
-    else:
-        raise Exception('Annotation file path does not exist')
-
-    if args.coco_ann is not None:
-        path_to_ann = args.coco_ann
-        annotation_extractor = ExtractorCOCO()
-    else:
-        raise Exception('Annotation file path does not exist')
-
-    if args.ed_det is not None:
-        path_to_ann = args.ed_det
-        detection_extractor = ExtractorED()
-    else:
-        raise Exception('Detection file path does not exist')
+        raise Exception(
+            "You did not specify an absolute path to the file with class names"
+        )
 
     if args.yolo_det is not None:
-        path_to_ann = args.yolo_det
-        detection_extractor = ExtractorYOLO()
-    else:
-        raise Exception('Detection file path does not exist')
-
-    preprocess_dict = {
-        "classes": class_names,
-        "ann_extractor": annotation_extractor,
-        "det_extractor": detection_extractor,
-        "ann_path": path_to_ann,
-        "det_path": path_to_det,
-        "names_test_samples": names_test_samples,
-    }
-
-    preprocess = None
-    if args.yolo:
+        preprocess_dict["det_path"] = args.yolo_det
+        preprocess_dict["det_extractor"] = ExtractorYOLO()
+        if args.xml_ann is not None:
+            preprocess_dict["ann_path"] = args.xml_ann
+            preprocess_dict["ann_extractor"] = ExtractorXML()
+        if args.json_ann is not None:
+            preprocess_dict["ann_path"] = args.json_ann
+            preprocess_dict["ann_extractor"] = ExtractorJSON()
+        if args.coco_ann is not None:
+            preprocess_dict["ann_path"] = args.coco_ann
+            preprocess_dict["ann_extractor"] = ExtractorCOCO()
         preprocess = YOLOPreprocessor(preprocess_dict).preprocess()
-    else:
-        raise Exception("You didn't specify a required parameter '--yolo' for input preprocessing")
 
-    if args.efficient_det:
+    if args.ed_det is not None:
+        preprocess_dict["det_path"] = args.ed_det
+        preprocess_dict["det_extractor"] = ExtractorED()
+        if args.xml_ann is not None:
+            preprocess_dict["ann_path"] = args.xml_ann
+            preprocess_dict["ann_extractor"] = ExtractorXML()
+        if args.json_ann is not None:
+            preprocess_dict["ann_path"] = args.json_ann
+            preprocess_dict["ann_extractor"] = ExtractorJSON()
+        if args.coco_ann is not None:
+            preprocess_dict["ann_path"] = args.coco_ann
+            preprocess_dict["ann_extractor"] = ExtractorCOCO()
         preprocess = EfficientDetPreprocessor(preprocess_dict).preprocess()
-    else:
-        raise Exception("You didn't specify a required parameter '--efficient_det' for input preprocessing")
 
     metrics = calculate_metrics(preprocess)
-
-    data_for_figure = {"data": metrics,
-             "classes": class_names,
-             "save": False,
-             "show": False,
-             }
+    data_for_figure = {
+        "data": metrics,
+        "classes": preprocess_dict["classes"],
+        "save": None,
+        "show": None,
+    }
 
     if args.show_fig:
         data_for_figure["show"] = True
