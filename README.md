@@ -54,7 +54,7 @@ python3 main.py --test_files /path_to_file_with_names_of_test_images/test.txt \
 * `--show_term` - абсолютный путь до всех файлов с детекциями
 * `--save_metric` - абсолютный путь до всех файлов с аннотациями
 # Result
-Есть возможность отобразить рисунки на экране или сохранить их. Расчем метрик выводится в терминал или сохраняется в файл .csv в папку `results`.
+Есть возможность отобразить рисунки на экране или сохранить их. Расчем метрик выводится в терминал или сохраняется в файл `.csv` в папку `results`.
 <table width="1000" margin=auto>
   <td><img src="results/figures/F1_2022-03-13_16:59:27.jpg" width="213" height="160"></td>
   <td><img src="results/figures/RP_2022-03-13_16:59:25.jpg" width="213" height="160"></td>
