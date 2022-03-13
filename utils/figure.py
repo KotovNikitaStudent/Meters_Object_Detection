@@ -3,7 +3,11 @@ import datetime
 import matplotlib.pyplot as plt
 
 
-def figure(data):
+def figure(data: dict) -> None:
+    """
+    Draw curves Precision/Recall, F1/score, ROC-curve for each class, show them, also save them to folder with results
+    :param data: dictionary with data for build figures
+    """
     precision = data["data"]["pr"]
     recall = data["data"]["rc"]
     score = data["data"]["sc"]
@@ -13,8 +17,11 @@ def figure(data):
     tp_roc = data["data"]["tp_roc"]
     fp_roc = data["data"]["fp_roc"]
 
-    if not os.path.exists("./figures"):
-        os.mkdir("./figures")
+    if not os.path.exists("./results"):
+        os.mkdir("./results")
+
+    if not os.path.exists("results/figures"):
+        os.mkdir("results/figures")
 
     plt.figure(1)
     for p, r, class_ in zip(precision, recall, class_name):
@@ -26,7 +33,7 @@ def figure(data):
     plt.legend()
     if data["save"]:
         plt.savefig(
-            f"figures/RP_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
+            f"results/figures/RP_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
         )
     if data["show"]:
         plt.show()
@@ -41,7 +48,7 @@ def figure(data):
     plt.legend()
     if data["save"]:
         plt.savefig(
-            f"figures/F1_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
+            f"results/figures/F1_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
         )
     if data["show"]:
         plt.show()
@@ -57,13 +64,20 @@ def figure(data):
     plt.legend()
     if data["save"]:
         plt.savefig(
-            f"figures/ROC_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
+            f"results/figures/ROC_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
         )
     if data["show"]:
         plt.show()
 
 
-def curve_roc(score, fp_roc, tp_roc):
+def curve_roc(score: list, fp_roc: list, tp_roc: list) -> list:
+    """
+    Calculation of values for plotting ROC-curve, as well as calculation AUC
+    :param score:
+    :param fp_roc:
+    :param tp_roc:
+    :return:
+    """
     db = []
     pos, neg = 0, 0
     for scr, fp_rc, tp_rc in zip(score, fp_roc, tp_roc):

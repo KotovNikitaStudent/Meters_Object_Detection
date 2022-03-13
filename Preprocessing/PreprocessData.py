@@ -3,6 +3,25 @@ from collections import defaultdict
 
 
 class Preprocessor:
+    """Preparation of detection data and annotations for calculating metrics
+    Attributes
+        ----------
+        data : dict
+            Dictionary with data for calculation metrics with keys:
+            "classes": list (sorted list of class names)
+            "ann_extractor": AnnotationExtractor (annotation extractor object)
+            "det_extractor": DetectionExtractor (detection extractor object)
+            "ann_path": str (absolute path to the folder with all annotation)
+            "det_path": str (absolute path to the folder with all annotation)
+            "names_test_samples": str (absolute path to the file in format .txt with list of all test images)
+    Methods
+        ----------
+        preprocess()
+            Returns a dictionary with prepared data for calculating metrics with keys:
+            "annotations": list (tensor dimension - [number_of_test_files X number_of_classes X number_of_samples])
+            "detections": list (tensor dimension - [number_of_test_files X number_of_classes X number_of_samples])
+    """
+
     def __init__(self, data):
         self.classes = data["classes"]
         self.ann_extractor = data["ann_extractor"]
@@ -11,7 +30,7 @@ class Preprocessor:
         self.det_path = data["det_path"]
         self.names_test_samples = data["names_test_samples"]
 
-    def preprocess(self):
+    def preprocess(self) -> dict:
         pass
 
 
@@ -19,7 +38,19 @@ class EfficientDetPreprocessor(Preprocessor):
     def __init__(self, data):
         super(EfficientDetPreprocessor, self).__init__(data)
 
-    def preprocess(self):
+    def preprocess(self) -> dict:
+        """Preparation of detection data and annotations for calculating metrics (EfficientDet case)
+            Attributes
+        ----------
+        data : dict
+            Dictionary with data for calculation metrics with keys:
+            "classes": list (sorted list of class names)
+            "ann_extractor": AnnotationExtractor (annotation extractor object)
+            "det_extractor": DetectionExtractor (detection extractor object)
+            "ann_path": str (absolute path to the folder with all annotation)
+            "det_path": str (absolute path to the folder with all annotation)
+            "names_test_samples": str (absolute path to the file in format .txt with list of all test images)
+        """
         all_ann, all_det = [], []
 
         all_samples = get_list_of_images(self.names_test_samples)
@@ -53,7 +84,19 @@ class YOLOPreprocessor(Preprocessor):
     def __init__(self, data):
         super(YOLOPreprocessor, self).__init__(data)
 
-    def preprocess(self):
+    def preprocess(self) -> dict:
+        """Preparation of detection data and annotations for calculating metrics (YOLO case)
+            Attributes
+        ----------
+        data : dict
+            Dictionary with data for calculation metrics with keys:
+            "classes": list (sorted list of class names)
+            "ann_extractor": AnnotationExtractor (annotation extractor object)
+            "det_extractor": DetectionExtractor (detection extractor object)
+            "ann_path": str (absolute path to the folder with all annotation)
+            "det_path": str (absolute path to the folder with all annotation)
+            "names_test_samples": str (absolute path to the file in format .txt with list of all test images)
+        """
         all_ann, all_det = [], []
 
         # Annotation preprocessing
@@ -104,6 +147,11 @@ class YOLOPreprocessor(Preprocessor):
 
 
 def get_list_of_images(path_to_file: str) -> list:
+    """
+    Get a list of all test images from a file
+    :param path_to_file: absolut path to file with list of test images
+    :return: list of test images
+    """
     if not path_to_file.split("/")[-1].endswith(".txt"):
         raise Exception("Wrong file extension")
     else:
@@ -116,7 +164,13 @@ def get_list_of_images(path_to_file: str) -> list:
         return sorted(list_of_files)
 
 
-def test_files(curr_files, test_list):
+def test_files(curr_files: list, test_list: list) -> list:
+    """
+    Checking if the current file exists in the list of test files
+    :param curr_file: list of current files
+    :param test_list: list of test files
+    :return: list of files for calculating metrics
+    """
     list_files = []
 
     for cf in curr_files:

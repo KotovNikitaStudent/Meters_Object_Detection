@@ -1,9 +1,12 @@
 import numpy as np
-from compute_overlap import compute_overlap
+from utils.compute_overlap import compute_overlap
 
 
-def calculate_metrics(data):
-    """Calculation of F1, R, P, score metrics, recording data about them in the .json file"""
+def calculate_metrics(data: dict) -> dict:
+    """Calculation of F1, R, P, score metrics, recording data about them in the .json file
+    :param data: data of detection and annotation
+    :return: dictionary of lists with metrics F1-score, R, P, Score, AP, TP, FP
+    """
     det = data["detections"]
     ann = data["annotations"]
 
@@ -107,8 +110,12 @@ def calculate_metrics(data):
     return result
 
 
-def compute_ap(recall: list, precision: list):
-    """Compute the average precision, given the recall and precision curves"""
+def compute_ap(recall: list, precision: list) -> object:
+    """Compute the average precision, given the recall and precision curves
+    :param recall: list of values racall
+    :param precision: list of values precision
+    :return: list of values AP metric
+    """
     mrec = np.concatenate(([0.0], recall, [1.0]))
     mpre = np.concatenate(([0.0], precision, [0.0]))
 
