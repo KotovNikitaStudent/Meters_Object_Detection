@@ -53,21 +53,21 @@ def figure(data: dict) -> None:
     if data["show"]:
         plt.show()
 
-    plt.figure(3)
-    for scr, fp_rc, tp_rc, class_ in zip(score, fp_roc, tp_roc, class_name):
-        x, y, auc = curve_roc(scr, tp_rc, fp_rc)
-        plt.plot(x, y, label=class_ + f" (AUC = {round(auc, 3)})")
-        plt.xlabel("False Positive Rate")
-        plt.ylabel("True Positive Rate")
-        plt.title(f"ROC curve")
-        plt.grid(True)
-    plt.legend()
-    if data["save"]:
-        plt.savefig(
-            f"results/figures/ROC_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
-        )
-    if data["show"]:
-        plt.show()
+    # plt.figure(3)
+    # for scr, fp_rc, tp_rc, class_ in zip(score, fp_roc, tp_roc, class_name):
+    #     x, y, auc = curve_roc(scr, tp_rc, fp_rc)
+    #     plt.plot(x, y, label=class_ + f" (AUC = {round(auc, 3)})")
+    #     plt.xlabel("False Positive Rate")
+    #     plt.ylabel("True Positive Rate")
+    #     plt.title(f"ROC curve")
+    #     plt.grid(True)
+    # plt.legend()
+    # if data["save"]:
+    #     plt.savefig(
+    #         f"results/figures/ROC_{datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
+    #     )
+    # if data["show"]:
+    #     plt.show()
 
 
 def curve_roc(score: list, fp_roc: list, tp_roc: list) -> list:
